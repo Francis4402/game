@@ -6,8 +6,8 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { db } from "../db/db";
-import { usersTable } from "../db/schema";
+import { db } from "../../db/db";
+import { usersTable } from "../../db/schema";
 
 
 export const authOptions: NextAuthOptions = {
