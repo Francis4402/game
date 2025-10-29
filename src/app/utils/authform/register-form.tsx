@@ -11,12 +11,11 @@ import { SubmitHandler, useForm } from "react-hook-form"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { RegisterValidation, registerValidation } from "../AuthValidation/validation"
-import { register } from "@/app/services/authservices"
 import { toast } from "sonner"
 import { useState } from "react"
-import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { GithubIcon } from "lucide-react"
+import { signUp } from "@/authserver/users"
+
 
 
 export function RegisterForm({
@@ -30,42 +29,26 @@ export function RegisterForm({
 
   const form = useForm({
     resolver: zodResolver(registerValidation),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    }
   });
 
   const {formState: {isSubmitting}} = form;
 
   const onSubmit: SubmitHandler<RegisterValidation> = async (data) => {
-    try {
+    const {success, message} = await signUp(data.name, data.email, data.password);
 
-        const result = await register(data);
-        
-        if (result?.success) {
-            toast.success(result.message || "Registered successfully");
-            form.reset();
-            setImageUrl(null);
-
-            const login = await signIn("credentials", {
-              email: data.email,
-              password: data.password,
-              callbackUrl: "http://localhost:3000",
-              redirect: false,
-            });
-
-            if (login?.ok) {
-              toast.success("Login successful");
-              form.reset();
-              router.refresh();
-            } else {
-              toast.error("Login failed");
-            }
-        } else {
-            toast.error(result?.error || result?.message || "Registration failed");
-        }
-    } catch (error) {
-        console.error("Registration submission error:", error);
-        toast.error(error instanceof Error ? error.message : "Registration failed");
+    if (success) {
+      toast.success(message as string);
+      router.push("/");
+    } else {
+      toast.error(message as string);
     }
-}
+  }
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -129,21 +112,23 @@ export function RegisterForm({
                   </FormItem>
                 )} />
 
+                <FormField control={form.control} name="confirmPassword" render={({field}) => (
+                    <FormItem>
+                        <FormLabel>Confirm Password</FormLabel>
+                        <FormControl>
+                            <Input {...field} type="password" placeholder="Confirm your password" />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )} />
+
                 <Button type="submit" className="w-full">
                   {isSubmitting ? "Loading..." : "Register"}
                 </Button>
 
                 
-                <div className="grid grid-cols-2 gap-4">
-                  <Button variant="outline" type="button" className="w-full" onClick={() => signIn("github", {
-                    callbackUrl: "http://localhost:3000",
-                  })}>
-                    <GithubIcon />
-                    <span className="sr-only">Login with Github</span>
-                  </Button>
-                  <Button variant="outline" type="button" className="w-full" onClick={() => signIn("google", {
-                    callbackUrl: "http://localhost:3000",
-                  })}>
+                <div className="grid gap-4">
+                  <Button variant="outline" type="button" className="w-full">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                       <path
                         d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
@@ -164,11 +149,12 @@ export function RegisterForm({
           </Form>
           <div className="bg-muted relative">
             <Image
-              src="/im.jpg"
-              alt="Image"
-              width={400}
-              height={400}
-              className="absolute inset-0 h-full w-full object-cover"
+              src={"/getty.png"}
+              alt="i"
+              width={1024}
+              height={1024}
+              priority={true}
+              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
             />
           </div>
         </CardContent>

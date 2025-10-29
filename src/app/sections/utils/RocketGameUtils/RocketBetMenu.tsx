@@ -14,7 +14,7 @@ interface RocketBetMenuProps {
 
 const RocketBetMenu = ({ cash, betAmount, setBetAmount, launched, exploded, multiplier, onBet, onCloseBet, closedBet }: RocketBetMenuProps  ) => {
   return (
-    <div className="absolute w-full bottom-10 bg-white p-4 rounded shadow-md space-x-4 flex items-center">
+    <div className="w-full bg-white p-4 rounded shadow-md space-x-4 flex items-center">
         <input
           type="number"
           min={0}

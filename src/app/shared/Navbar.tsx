@@ -1,50 +1,64 @@
 "use client"
 
-import { ModeToggle } from '@/components/ToggleButton'
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { Card, CardAction, CardHeader, CardTitle } from '@/components/ui/card'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { signOut, useSession } from 'next-auth/react'
+import { authClient } from '@/lib/auth-client'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
+import { LogOut } from 'lucide-react';
+import { User } from '../types'
 
 
 
+const Navbar = ({session}: {session: User}) => {
 
-const Navbar = () => {
+  const router = useRouter();
 
-    const {data: session} = useSession();
+  const handleLogout = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          toast.success('You have been logged out successfully');
+        }
+      }
+    });
+    router.push("/");
+    router.refresh();
+  }
+
 
   return (
-    <Card className="w-full mb-10">
-      <CardHeader className="text-center">
-        <ModeToggle />
-        <CardTitle>
-          <Link href="/">Next CRUD</Link>
-        </CardTitle>
-        <CardAction>
+    <div className="w-full bg-transparent shadow">
+      <div className="text-center flex items-center justify-between p-4 container mx-auto">
+        <Link href="/" className='text-2xl font-bold'>GM</Link>
+        <div>
           {session?.user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar>
-                  <AvatarImage src={session.user.image ? session.user.image : ""} />
+                  <AvatarImage src={session?.user?.image || ''} />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent align='end'>
-                <DropdownMenuItem onClick={() => signOut()}>
+                <DropdownMenuItem onClick={handleLogout}>
+                  <LogOut />
                   Logout
                 </DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu>
+          </DropdownMenu>
           ) : (
-            <Link href="/login">
-              <Button variant="default">Login</Button>
-            </Link>
+          <Link href="/login">
+            <Button variant="default">Login</Button>
+          </Link>
           )}
-        </CardAction>
-      </CardHeader>
-    </Card>
+          
+        </div>
+      </div>
+    </div>
   )
 }
 

@@ -3,7 +3,7 @@ import { RegisterForm } from '@/app/utils/authform/register-form'
 
 const Register = () => {
   return (
-    <div className='flex flex-col items-center justify-center'>
+    <div className='flex flex-col items-center justify-center h-screen'>
       <div className="w-full max-w-sm md:max-w-3xl">
         <RegisterForm />
       </div>

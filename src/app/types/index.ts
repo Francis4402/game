@@ -7,6 +7,7 @@ export interface User {
         image?: string | null | undefined;
         email?: string | null | undefined;
         role?: string | null | undefined;
+        credites?: number | null | undefined;
     }
 }
 

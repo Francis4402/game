@@ -5,9 +5,10 @@ import React, { forwardRef, useRef, useImperativeHandle, useState } from 'react'
 import * as THREE from 'three'
 import { Text } from '@react-three/drei';
 import { RocketModel } from '@/app/load3dmodels/3dmodel';
+import Stars from './Stars';
 import Fire from './Fire';
 import Smoke from './Smoke';
-import Stars from './Stars';
+
 
 type RocketProps = {
     launched: boolean;

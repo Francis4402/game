@@ -2,12 +2,16 @@
 
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useEffect, useState, useRef } from "react"
-import Rocket from "./utils/Rocket";
-import Smoke from "./utils/Smoke";
+import Smoke from "./utils/RocketGameUtils/Smoke";
 import { OrbitControls } from "@react-three/drei";
 import * as THREE from 'three';
-import Fire from "./utils/Fire";
-import RocketBetMenu from "./utils/RocketBetMenu";
+import Fire from "./utils/RocketGameUtils/Fire";
+import RocketBetMenu from "./utils/RocketGameUtils/RocketBetMenu";
+import { toast } from "sonner";
+import Rocket from "./utils/RocketGameUtils/Rocket";
+import { Button } from "@/components/ui/button";
+import { ArrowBigLeft } from "lucide-react";
+import Link from "next/link";
 
 const CameraController = ({ rocketRef, launched }: { rocketRef: React.RefObject<THREE.Mesh | null>, launched: boolean }) => {
     useFrame((state) => {
@@ -54,7 +58,7 @@ const RocketGame = () => {
             setExploded(true)
             if (!closedBet) {
               setCash((c) => Math.max(0, c - 20))
-              alert("\uD83D\uDCA5 You lost! Rocket exploded.")
+              toast.error("\uD83D\uDCA5 You lost! Rocket exploded.")
             }
           }, delay)
           return () => clearTimeout(timer)
@@ -85,7 +89,7 @@ const RocketGame = () => {
           setMultiplier(1.0);
           setCash((c) => Math.max(0, c - betAmount))
         } else {
-          alert("Invalid bet amount!");
+          toast.error("Invalid bet amount!");
         }
       }
 
@@ -93,12 +97,13 @@ const RocketGame = () => {
         if (!exploded && !closedBet) {
           setClosedBet(true)
           setCash((c) => c + betAmount * multiplier)
-          alert(`✅ You won! Cashed out at ${multiplier}x.`)
+          toast.success(`✅ You won! Cashed out at ${multiplier}x.`)
         }
       }
 
   return (
-    <div className="w-full h-screen bg-blue-950">
+    <div className="w-full h-[90svh] bg-blue-950">
+      <Link href={"/"} className="absolute p-10 z-10"><Button variant={"outline"}><ArrowBigLeft/></Button></Link>
       <Canvas key={gameId} camera={{ position: [0, 2, 5], fov: 70 }}>
         <ambientLight />
         <pointLight position={[10, 10, 10]} />

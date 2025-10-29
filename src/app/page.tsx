@@ -1,10 +1,15 @@
-import RocketGame from "./page/RocketGame";
+import { userData } from "@/authserver/users";
+import HomePage from "./sections/HomePage";
 
 
-export default function Home() {
+
+export default async function Home() {
+
+  const session = await userData();
+
   return (
     <div>
-      <RocketGame/>
+      <HomePage session = {session} />
     </div>
   );
 }
