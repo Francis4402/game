@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import React, { useState, useEffect } from 'react';
@@ -7,7 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Flame, Trophy, Zap, Star, ChevronRight, Dice1, Spade, Crown, Sparkles, Coins, Rocket, DollarSign } from 'lucide-react';
 import Link from 'next/link';
 
-export default function Homepage({session}: {session: any}) {
+
+
+export default function Homepage() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [floatingCoins, setFloatingCoins] = useState<{ id: number; left: number; delay: number; duration: number }[]>([]);
   const [jackpotAmount, setJackpotAmount] = useState(8547230);
@@ -37,14 +38,14 @@ export default function Homepage({session}: {session: any}) {
   ];
 
   const games = [
-    { id: 1, name: 'Mega Fortune', category: 'slots', jackpot: '$2.4M', gradient: 'from-yellow-400 via-orange-500 to-red-500', hot: true },
-    { id: 2, name: 'Blackjack Pro', category: 'table', players: '1.2k', gradient: 'from-blue-400 via-purple-500 to-pink-500', popular: true },
-    { id: 3, name: 'Roulette Royale', category: 'live', players: '856', gradient: 'from-red-400 via-pink-500 to-purple-500', new: true },
-    { id: 4, name: 'Lucky Sevens', category: 'slots', jackpot: '$890K', gradient: 'from-green-400 via-emerald-500 to-teal-500', hot: true },
-    { id: 5, name: 'Poker Masters', category: 'table', players: '2.1k', gradient: 'from-indigo-400 via-purple-500 to-pink-500', popular: true },
-    { id: 6, name: 'Divine Fortune', category: 'jackpot', jackpot: '$3.2M', gradient: 'from-yellow-300 via-yellow-500 to-orange-500', hot: true },
-    { id: 7, name: 'Baccarat Elite', category: 'live', players: '645', gradient: 'from-cyan-400 via-blue-500 to-indigo-500', new: true },
-    { id: 8, name: 'Starburst XXX', category: 'slots', jackpot: '$450K', gradient: 'from-pink-400 via-purple-500 to-indigo-500', popular: true },
+    { id: 1, name: 'Mega Fortune', category: 'slots', jackpot: '$2.4M', gradient: 'from-yellow-400 via-orange-500 to-red-500', hot: true, link: "/megafortune" },
+    { id: 2, name: 'Blackjack Pro', category: 'table', players: '1.2k', gradient: 'from-blue-400 via-purple-500 to-pink-500', popular: true, link: "/megafortune" },
+    { id: 3, name: 'Roulette Royale', category: 'live', players: '856', gradient: 'from-red-400 via-pink-500 to-purple-500', new: true, link: "/megafortune" },
+    { id: 4, name: 'Lucky Sevens', category: 'slots', jackpot: '$890K', gradient: 'from-green-400 via-emerald-500 to-teal-500', hot: true, link: "/megafortune" },
+    { id: 5, name: 'Poker Masters', category: 'table', players: '2.1k', gradient: 'from-indigo-400 via-purple-500 to-pink-500', popular: true, link: "/megafortune" },
+    { id: 6, name: 'Divine Fortune', category: 'jackpot', jackpot: '$3.2M', gradient: 'from-yellow-300 via-yellow-500 to-orange-500', hot: true, link: "/megafortune" },
+    { id: 7, name: 'Baccarat Elite', category: 'live', players: '645', gradient: 'from-cyan-400 via-blue-500 to-indigo-500', new: true, link: "/megafortune" },
+    { id: 8, name: 'Starburst XXX', category: 'slots', jackpot: '$450K', gradient: 'from-pink-400 via-purple-500 to-indigo-500', popular: true, link: "/megafortune" },
   ];
 
   const filteredGames = activeCategory === 'all' 
@@ -78,30 +79,6 @@ export default function Homepage({session}: {session: any}) {
 
       <div className="relative z-10">
         {/* Header */}
-        <header className="border-b border-purple-500/30 bg-black/80 backdrop-blur-2xl sticky top-0 z-50 shadow-lg shadow-purple-500/20">
-          <div className="container mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 via-pink-500 to-purple-600 rounded-xl flex items-center justify-center animate-pulse shadow-lg shadow-purple-500/50">
-                  <Crown className="w-7 h-7 text-white" />
-                </div>
-                <span className="text-3xl font-black bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 bg-clip-text text-transparent">
-                  ROYAL<span className="text-white">WIN</span>
-                </span>
-              </div>
-              <div className="flex items-center gap-4">
-                <Link href={"/login"}>
-                  <Button variant="outline" className="border-2 border-purple-500 text-purple-300 hover:bg-purple-500 hover:text-white font-bold">
-                    Login
-                  </Button>
-                </Link>
-                <Button className="bg-gradient-to-r from-yellow-500 via-pink-500 to-purple-600 hover:from-yellow-600 hover:via-pink-600 hover:to-purple-700 font-bold shadow-lg shadow-purple-500/50 animate-pulse">
-                  Sign Up Now
-                </Button>
-              </div>
-            </div>
-          </div>
-        </header>
 
         {/* Mega Jackpot Banner */}
         <div className="container mx-auto px-4 py-4">
@@ -213,7 +190,8 @@ export default function Homepage({session}: {session: any}) {
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {filteredGames.map((game) => (
-              <Card key={game.id} className="bg-slate-900 border-4 border-purple-500/50 backdrop-blur overflow-hidden hover:border-yellow-400 transition-all hover:scale-110 cursor-pointer group shadow-2xl shadow-purple-500/30">
+              <Link key={game.id} href={game.link}>
+                <Card className="bg-slate-900 border-4 border-purple-500/50 backdrop-blur overflow-hidden hover:border-yellow-400 transition-all hover:scale-110 cursor-pointer group shadow-2xl shadow-purple-500/30">
                 <CardContent className="p-0">
                   <div className={`relative aspect-square bg-gradient-to-br ${game.gradient} flex items-center justify-center text-8xl`}>
                     <div className="absolute inset-0 bg-black/20"></div>
@@ -270,6 +248,7 @@ export default function Homepage({session}: {session: any}) {
                   </div>
                 </CardContent>
               </Card>
+              </Link>
             ))}
           </div>
         </section>

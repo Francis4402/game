@@ -4,20 +4,26 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Crown, Sparkles, Flame, Trophy, Lock, Mail, Eye, EyeOff } from 'lucide-react';
+import { Crown, Sparkles, Flame, Trophy, Lock, Mail, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { FloatingIcon } from '@/app/types';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { LoginValidation, loginValidation } from '../AuthValidation/validation';
+import { signIn } from '@/authserver/users';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import { Form } from '@/components/ui/form';
+import { authClient } from '@/lib/auth-client';
+import Link from 'next/link';
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
-  type FloatingIcon = {
-    id: number;
-    icon: string;
-    left: number;
-    delay: number;
-    duration: number;
-  };
+  
   const [floatingIcons, setFloatingIcons] = useState<FloatingIcon[]>([]);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const router = useRouter();
 
   useEffect(() => {
     const icons = Array.from({ length: 15 }, (_, i) => ({
@@ -30,9 +36,38 @@ export default function LoginForm() {
     setFloatingIcons(icons);
   }, []);
 
-  const handleSubmit = () => {
-    console.log('Login attempt:', { email, password });
-  };
+  const signInWithGoogle = async () => {
+    await authClient.signIn.social({
+      provider: 'google',
+      callbackURL: "/",
+      fetchOptions: {
+        onSuccess: () => {
+          toast.success("login in successful");
+        }
+      }
+    })
+  }
+
+  const form = useForm({
+    resolver: zodResolver(loginValidation),
+    defaultValues: {
+      email: '',
+      password: '',
+    }
+  });
+
+  const {formState: {isSubmitting}} = form;
+
+  const onSubmit: SubmitHandler<LoginValidation> = async (data) => {
+    const {success, message} = await signIn(data.email, data.password);
+
+    if (success) {
+      toast.success(message as string);
+      router.push("/");
+    } else {
+      toast.error(message as string);
+    }
+  }
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden flex items-center justify-center p-4">
@@ -94,63 +129,64 @@ export default function LoginForm() {
                   </div>
                 </div>
 
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <div className="space-y-2">
+                      <label className="text-white font-bold text-sm uppercase tracking-wider flex items-center gap-2">
+                        <Mail className="w-4 h-4 text-purple-400" />
+                        Email Address
+                      </label>
+                      <div className="relative">
+                        <Input
+                          type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          placeholder="Enter your email"
+                          className="w-full bg-slate-900/50 border-2 border-purple-500/50 text-white placeholder:text-gray-500 focus:border-purple-400 h-12 px-4 rounded-xl font-medium"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-white font-bold text-sm uppercase tracking-wider flex items-center gap-2">
+                        <Lock className="w-4 h-4 text-purple-400" />
+                        Password
+                      </label>
+                      <div className="relative">
+                        <Input
+                          type={showPassword ? "text" : "password"}
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          placeholder="Enter your password"
+                          className="w-full bg-slate-900/50 border-2 border-purple-500/50 text-white placeholder:text-gray-500 focus:border-purple-400 h-12 px-4 pr-12 rounded-xl font-medium"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition"
+                        >
+                          {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="text-right">
+                      <a href="#" className="text-purple-400 hover:text-purple-300 text-sm font-bold transition">
+                        Forgot Password?
+                      </a>
+                    </div>
+
+                    <Button
+                    type="submit" disabled={isSubmitting}
+                      className="w-full bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 hover:from-purple-700 hover:via-pink-700 hover:to-orange-700 text-white font-black text-lg h-14 rounded-xl shadow-xl shadow-purple-500/50 border-2 border-purple-400"
+                    >
+                      {isSubmitting ? <Loader2 className='animate-spin w-10 h-10' /> : "LOGIN & PLAY NOW"}
+                    </Button>
+
+                  </form>
+                </Form>
                 {/* Login Form */}
-                <div className="space-y-6">
-                  {/* Email Field */}
-                  <div className="space-y-2">
-                    <label className="text-white font-bold text-sm uppercase tracking-wider flex items-center gap-2">
-                      <Mail className="w-4 h-4 text-purple-400" />
-                      Email Address
-                    </label>
-                    <div className="relative">
-                      <Input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Enter your email"
-                        className="w-full bg-slate-900/50 border-2 border-purple-500/50 text-white placeholder:text-gray-500 focus:border-purple-400 h-12 px-4 rounded-xl font-medium"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Password Field */}
-                  <div className="space-y-2">
-                    <label className="text-white font-bold text-sm uppercase tracking-wider flex items-center gap-2">
-                      <Lock className="w-4 h-4 text-purple-400" />
-                      Password
-                    </label>
-                    <div className="relative">
-                      <Input
-                        type={showPassword ? "text" : "password"}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Enter your password"
-                        className="w-full bg-slate-900/50 border-2 border-purple-500/50 text-white placeholder:text-gray-500 focus:border-purple-400 h-12 px-4 pr-12 rounded-xl font-medium"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition"
-                      >
-                        {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Forgot Password */}
-                  <div className="text-right">
-                    <a href="#" className="text-purple-400 hover:text-purple-300 text-sm font-bold transition">
-                      Forgot Password?
-                    </a>
-                  </div>
-
-                  {/* Login Button */}
-                  <Button
-                    onClick={handleSubmit}
-                    className="w-full bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 hover:from-purple-700 hover:via-pink-700 hover:to-orange-700 text-white font-black text-lg h-14 rounded-xl shadow-xl shadow-purple-500/50 border-2 border-purple-400"
-                  >
-                    LOGIN & PLAY NOW
-                  </Button>
+                <div className="space-y-6">                  
 
                   {/* Divider */}
                   <div className="relative">
@@ -165,6 +201,7 @@ export default function LoginForm() {
                   {/* Social Login */}
                   <div className="grid grid-cols-2 gap-4">
                     <Button
+                      onClick={signInWithGoogle}
                       type="button"
                       variant="outline"
                       className="w-full border-2 border-purple-500/50 bg-slate-900/50 hover:bg-slate-800 text-white font-bold h-12 rounded-xl"
@@ -193,9 +230,9 @@ export default function LoginForm() {
                   <div className="text-center pt-4">
                     <p className="text-gray-400 font-medium">
                       Don&apos;t have an account?{' '}
-                      <a href="#" className="text-yellow-400 hover:text-yellow-300 font-black transition">
+                      <Link href="/register" className="text-yellow-400 hover:text-yellow-300 font-black transition">
                         Sign Up Now!
-                      </a>
+                      </Link>
                     </p>
                   </div>
                 </div>

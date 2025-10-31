@@ -1,4 +1,10 @@
-
+export type FloatingIcon = {
+    id: number;
+    icon: string;
+    left: number;
+    delay: number;
+    duration: number;
+};
 
 export interface User {
     user?: {

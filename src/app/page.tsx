@@ -1,5 +1,6 @@
 import { userData } from "@/authserver/users";
 import HomePage from "./sections/HomePage";
+import Navbar from "./shared/Navbar";
 
 
 
@@ -9,7 +10,8 @@ export default async function Home() {
 
   return (
     <div>
-      <HomePage session = {session} />
+      <Navbar session={session!} />
+      <HomePage />
     </div>
   );
 }
