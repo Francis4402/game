@@ -39,11 +39,11 @@ export default function Homepage() {
 
   const games = [
     { id: 1, name: 'Mega Fortune', category: 'slots', jackpot: '$2.4M', gradient: 'from-yellow-400 via-orange-500 to-red-500', hot: true, link: "/megafortune" },
-    { id: 2, name: 'Blackjack Pro', category: 'table', players: '1.2k', gradient: 'from-blue-400 via-purple-500 to-pink-500', popular: true, link: "/megafortune" },
-    { id: 3, name: 'Roulette Royale', category: 'live', players: '856', gradient: 'from-red-400 via-pink-500 to-purple-500', new: true, link: "/megafortune" },
+    { id: 2, name: 'Space Rocket', category: 'jackpot', players: '1.2k', gradient: 'from-blue-400 via-purple-500 to-pink-500', popular: true, link: "/rocket" },
+    { id: 3, name: 'Roulette Royale', category: 'live', players: '856', gradient: 'from-red-400 via-pink-500 to-purple-500', new: true, link: "/roulette" },
     { id: 4, name: 'Lucky Sevens', category: 'slots', jackpot: '$890K', gradient: 'from-green-400 via-emerald-500 to-teal-500', hot: true, link: "/megafortune" },
     { id: 5, name: 'Poker Masters', category: 'table', players: '2.1k', gradient: 'from-indigo-400 via-purple-500 to-pink-500', popular: true, link: "/megafortune" },
-    { id: 6, name: 'Divine Fortune', category: 'jackpot', jackpot: '$3.2M', gradient: 'from-yellow-300 via-yellow-500 to-orange-500', hot: true, link: "/megafortune" },
+    { id: 6, name: 'Divine Fortune', category: 'jackpot', jackpot: '$3.2M', gradient: 'from-yellow-300 via-yellow-500 to-orange-500', hot: true, link: "/divinefortune" },
     { id: 7, name: 'Baccarat Elite', category: 'live', players: '645', gradient: 'from-cyan-400 via-blue-500 to-indigo-500', new: true, link: "/megafortune" },
     { id: 8, name: 'Starburst XXX', category: 'slots', jackpot: '$450K', gradient: 'from-pink-400 via-purple-500 to-indigo-500', popular: true, link: "/megafortune" },
   ];
@@ -196,10 +196,10 @@ export default function Homepage() {
                   <div className={`relative aspect-square bg-gradient-to-br ${game.gradient} flex items-center justify-center text-8xl`}>
                     <div className="absolute inset-0 bg-black/20"></div>
                     <div className="relative z-10">
-                      {game.id === 1 && '🎰'}
-                      {game.id === 2 && '♠️'}
+                      {game.id === 1 && '💰'}
+                      {game.id === 2 && '🚀'}
                       {game.id === 3 && '🎲'}
-                      {game.id === 4 && '🍀'}
+                      {game.id === 4 && '🎰'}
                       {game.id === 5 && '♥️'}
                       {game.id === 6 && '⚡'}
                       {game.id === 7 && '♦️'}
