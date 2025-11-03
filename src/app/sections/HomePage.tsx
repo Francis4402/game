@@ -42,7 +42,7 @@ export default function Homepage() {
     { id: 2, name: 'Space Rocket', category: 'jackpot', players: '1.2k', gradient: 'from-blue-400 via-purple-500 to-pink-500', popular: true, link: "/rocket" },
     { id: 3, name: 'Roulette Royale', category: 'live', players: '856', gradient: 'from-red-400 via-pink-500 to-purple-500', new: true, link: "/roulette" },
     { id: 4, name: 'Lucky Sevens', category: 'slots', jackpot: '$890K', gradient: 'from-green-400 via-emerald-500 to-teal-500', hot: true, link: "/megafortune" },
-    { id: 5, name: 'Poker Masters', category: 'table', players: '2.1k', gradient: 'from-indigo-400 via-purple-500 to-pink-500', popular: true, link: "/megafortune" },
+    { id: 5, name: 'Chicken Fight', category: 'table', players: '2.1k', gradient: 'from-indigo-400 via-purple-500 to-pink-500', popular: true, link: "/chickenfight" },
     { id: 6, name: 'Divine Fortune', category: 'jackpot', jackpot: '$3.2M', gradient: 'from-yellow-300 via-yellow-500 to-orange-500', hot: true, link: "/divinefortune" },
     { id: 7, name: 'Baccarat Elite', category: 'live', players: '645', gradient: 'from-cyan-400 via-blue-500 to-indigo-500', new: true, link: "/megafortune" },
     { id: 8, name: 'Starburst XXX', category: 'slots', jackpot: '$450K', gradient: 'from-pink-400 via-purple-500 to-indigo-500', popular: true, link: "/megafortune" },
@@ -89,7 +89,7 @@ export default function Homepage() {
                 <Trophy className="w-12 h-12 text-white animate-bounce" />
                 <div>
                   <div className="text-white text-sm font-bold uppercase tracking-wider">Mega Jackpot</div>
-                  <div className="text-white text-3xl font-black">
+                  <div className="text-white md:text-3xl font-black">
                     ${jackpotAmount.toLocaleString()}
                   </div>
                 </div>
@@ -115,7 +115,7 @@ export default function Homepage() {
                 <span className="text-lg font-black uppercase">🎁 200% Bonus + 50 Free Spins!</span>
                 <Zap className="w-6 h-6" />
               </div>
-              <h1 className="text-6xl md:text-8xl font-black text-white mb-6 drop-shadow-2xl leading-tight">
+              <h1 className="md:text-6xl text-4xl font-black text-white mb-6 drop-shadow-2xl leading-tight">
                 WIN
                 <span className="block bg-gradient-to-r from-yellow-300 via-pink-400 to-purple-400 bg-clip-text text-transparent animate-pulse">
                   LEGENDARY
@@ -150,7 +150,7 @@ export default function Homepage() {
                   <div className={`w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-lg`}>
                     <stat.icon className="w-8 h-8 text-white" />
                   </div>
-                  <div className="text-4xl font-black text-white mb-2 drop-shadow-lg">{stat.value}</div>
+                  <div className="md:text-4xl text-2xl font-black text-white mb-2 drop-shadow-lg">{stat.value}</div>
                   <div className="text-sm text-gray-300 font-bold uppercase tracking-wider">{stat.label}</div>
                 </CardContent>
               </Card>
@@ -200,7 +200,7 @@ export default function Homepage() {
                       {game.id === 2 && '🚀'}
                       {game.id === 3 && '🎲'}
                       {game.id === 4 && '🎰'}
-                      {game.id === 5 && '♥️'}
+                      {game.id === 5 && '🐔'}
                       {game.id === 6 && '⚡'}
                       {game.id === 7 && '♦️'}
                       {game.id === 8 && '⭐'}

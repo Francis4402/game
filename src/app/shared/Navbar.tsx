@@ -38,7 +38,7 @@ const Navbar = ({session}: {session: User}) => {
             <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 via-pink-500 to-purple-600 rounded-xl flex items-center justify-center animate-pulse shadow-lg shadow-purple-500/50">
               <Crown className="w-7 h-7 text-white" />
             </div>
-            <span className="text-3xl font-black bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 bg-clip-text text-transparent">
+            <span className="md:text-3xl font-black bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-500 bg-clip-text text-transparent">
               ROYAL<span className="text-white">WIN</span>
             </span>
           </div>
