@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Rocket, Zap, Volume2, VolumeX, ArrowLeft, TrendingUp, Flame } from 'lucide-react';
+import Link from 'next/link';
 
 interface BetHistory {
   id: number;
@@ -235,10 +236,12 @@ export default function RocketCrashGame() {
       <div className="relative z-10 max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
-          <Button variant="outline" className="border-2 border-blue-500/50 bg-slate-900/50 text-white font-bold backdrop-blur-xl">
-            <ArrowLeft className="w-5 h-5 mr-2" />
-            Back to Games
-          </Button>
+          <Link href={"/"}>
+            <Button variant="outline" className="border-2 border-blue-500/50 bg-slate-900/50 text-white font-bold backdrop-blur-xl">
+              <ArrowLeft className="w-5 h-5 mr-2" />
+              Back to Games
+            </Button>
+          </Link>
 
           <div className="flex items-center gap-4">
             <div className="bg-slate-900/70 rounded-xl px-6 py-3 border-2 border-blue-500/50 backdrop-blur-xl">

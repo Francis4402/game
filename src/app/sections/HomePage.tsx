@@ -44,7 +44,7 @@ export default function Homepage() {
     { id: 4, name: 'Lucky Sevens', category: 'slots', jackpot: '$890K', gradient: 'from-green-400 via-emerald-500 to-teal-500', hot: true, link: "/megafortune" },
     { id: 5, name: 'Chicken Fight', category: 'table', players: '2.1k', gradient: 'from-indigo-400 via-purple-500 to-pink-500', popular: true, link: "/chickenfight" },
     { id: 6, name: 'Divine Fortune', category: 'jackpot', jackpot: '$3.2M', gradient: 'from-yellow-300 via-yellow-500 to-orange-500', hot: true, link: "/divinefortune" },
-    { id: 7, name: 'Baccarat Elite', category: 'live', players: '645', gradient: 'from-cyan-400 via-blue-500 to-indigo-500', new: true, link: "/megafortune" },
+    { id: 7, name: 'Coin Shuffle', category: 'live', players: '645', gradient: 'from-cyan-400 via-blue-500 to-indigo-500', new: true, link: "/coinshuffle" },
     { id: 8, name: 'Starburst XXX', category: 'slots', jackpot: '$450K', gradient: 'from-pink-400 via-purple-500 to-indigo-500', popular: true, link: "/megafortune" },
   ];
 
@@ -201,8 +201,8 @@ export default function Homepage() {
                       {game.id === 3 && '🎲'}
                       {game.id === 4 && '🎰'}
                       {game.id === 5 && '🐔'}
-                      {game.id === 6 && '⚡'}
-                      {game.id === 7 && '♦️'}
+                      {game.id === 6 && '🧞'}
+                      {game.id === 7 && '🪙'}
                       {game.id === 8 && '⭐'}
                     </div>
                     {game.hot && (
