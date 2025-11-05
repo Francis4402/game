@@ -1,6 +1,6 @@
 "use server"
 
-import { ForgotPasswordType, registerType, ResetPasswordType } from "../types";
+import { ForgotPasswordType, registerType, ResetPasswordType } from "../app/types";
 
 
 const baseUrl = process.env.BASE_URL;

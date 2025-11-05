@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { forgotPassword } from '@/app/services/authservices'
+import { forgotPassword } from '@/authserver/authservices'
 import { ForgotPasswordType } from '@/app/types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'

@@ -39,7 +39,7 @@ export default function Homepage() {
 
   const games = [
     { id: 1, name: 'Mega Fortune', category: 'slots', jackpot: '$2.4M', gradient: 'from-yellow-400 via-orange-500 to-red-500', hot: true, link: "/megafortune" },
-    { id: 2, name: 'Space Rocket', category: 'jackpot', players: '1.2k', gradient: 'from-blue-400 via-purple-500 to-pink-500', popular: true, link: "/rocket" },
+    { id: 2, name: 'Space Rocket', category: 'jackpot', players: '1.2k', gradient: 'from-blue-400 via-purple-500 to-pink-500', popular: true, link: "/space-rocket" },
     { id: 3, name: 'Roulette Royale', category: 'live', players: '856', gradient: 'from-red-400 via-pink-500 to-purple-500', new: true, link: "/roulette" },
     { id: 4, name: 'Lucky Sevens', category: 'slots', jackpot: '$890K', gradient: 'from-green-400 via-emerald-500 to-teal-500', hot: true, link: "/megafortune" },
     { id: 5, name: 'Chicken Fight', category: 'table', players: '2.1k', gradient: 'from-indigo-400 via-purple-500 to-pink-500', popular: true, link: "/chickenfight" },
