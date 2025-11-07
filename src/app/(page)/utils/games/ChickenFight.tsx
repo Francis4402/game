@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Trophy, Zap, Volume2, VolumeX, ArrowLeft, Shield, Swords, Heart, Flame } from 'lucide-react';
 import Link from 'next/link';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 interface Fighter {
   name: string;
@@ -28,9 +30,10 @@ interface BetHistory {
 }
 
 export default function ChickenFightGame({session}: {session: any}) {
+
   const [mounted, setMounted] = useState(false);
-  const [balance, setBalance] = useState(1000);
-  const [betAmount, setBetAmount] = useState(10);
+  const [credits, setCredits] = useState(session?.user?.credites || 0);
+  const [betAmount, setBetAmount] = useState(1);
   const [selectedFighter, setSelectedFighter] = useState<string | null>(null);
   const [fighting, setFighting] = useState(false);
   const [countdown, setCountdown] = useState(0);
@@ -47,6 +50,8 @@ export default function ChickenFightGame({session}: {session: any}) {
   const fightSoundRef = useRef<HTMLAudioElement | null>(null);
   const winSoundRef = useRef<HTMLAudioElement | null>(null);
   const crowdSoundRef = useRef<HTMLAudioElement | null>(null);
+
+  const router = useRouter();
 
   const fighters: Record<string, Fighter> = {
     red: {
@@ -87,6 +92,12 @@ export default function ChickenFightGame({session}: {session: any}) {
     }
   }, [mounted]);
 
+  useEffect(() => {
+    if (session?.user?.credites !== undefined) {
+      setCredits(session.user.credites);
+    }
+  }, [session]);
+
   const playSound = (soundRef: React.MutableRefObject<HTMLAudioElement | null>) => {
     if (soundEnabled && soundRef.current) {
       soundRef.current.currentTime = 0;
@@ -107,23 +118,63 @@ export default function ChickenFightGame({session}: {session: any}) {
     return Math.max(1.2, Math.min(5, odds)).toFixed(2);
   };
 
+  const updateCredits = async (amount: number, type: 'win' | 'loss') => {
+    try {
+      const res = await fetch('/api/credites/update', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({amount, type}),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setCredits(data.credits);
+        
+        if (data.credits === 0) {
+          toast.error('No credits remaining! Redirecting to home...');
+          setTimeout(() => {
+            router.push('/');
+          }, 3000);
+        }
+      }
+        
+      return data.credits;
+    } catch (error) {
+      console.error('Error updating credits:', error);
+      toast.error('Error updating credits');
+      return null;
+    }
+  }
+
   const placeBet = () => {
     if (!selectedFighter) {
       setMessage('Please select a chicken first!');
       return;
     }
 
-    if (betAmount > balance) {
-      setMessage('Insufficient balance!');
+    if (credits <= 0) {
+      toast.error('No credits remaining!');
+      setTimeout(() => {
+        router.push('/login');
+      }, 2000);
+      return;
+    }
+
+    if (betAmount > credits) {
+      toast.error('Insufficient credits!');
+      setMessage('Insufficient credits!');
       return;
     }
 
     if (betAmount < 1) {
+      toast.error('Minimum bet is 1 credit');
       setMessage('Minimum bet is $1');
       return;
     }
 
-    setBalance(balance - betAmount);
     setMessage(`Bet placed on ${fighters[selectedFighter].name}! Get ready!`);
     startCountdown();
   };
@@ -161,7 +212,7 @@ export default function ChickenFightGame({session}: {session: any}) {
     const fightLoop = setInterval(() => {
       turn++;
       
-      // Determine attacker based on speed with some randomness
+      
       const speedDiff = fighters.red.speed - fighters.blue.speed;
       const redAttacks = Math.random() * 100 < 50 + speedDiff;
       
@@ -184,41 +235,52 @@ export default function ChickenFightGame({session}: {session: any}) {
       setTimeout(() => setCurrentAttacker(null), 300);
 
       // Check for winner
-      if (health1 <= 0 || health2 <= 0 || turn >= 20) {
+      if (health1 <= 0 || health2 <= 0) {
         clearInterval(fightLoop);
         
         let winnerName = '';
-        if (health1 > health2) {
-          winnerName = 'red';
-        } else if (health2 > health1) {
+        if (health1 <= 0 && health2 <= 0) {
+          winnerName = health1 > health2 ? 'red' : 'blue';
+        } else if (health1 <= 0) {
           winnerName = 'blue';
         } else {
-          winnerName = Math.random() > 0.5 ? 'red' : 'blue';
+          winnerName = 'red';
         }
         
+        setTimeout(() => endFight(winnerName), 1000);
+      }  else if (turn >= 20) {
+        clearInterval(fightLoop);
+        const winnerName = health1 > health2 ? 'red' : health2 > health1 ? 'blue' : (Math.random() > 0.5 ? 'red' : 'blue');
         setTimeout(() => endFight(winnerName), 1000);
       }
     }, 800);
   };
 
-  const endFight = (winnerFighter: string) => {
+  const endFight = async (winnerFighter: string) => {
     setWinner(winnerFighter);
     setFighting(false);
     playSound(winSoundRef);
 
     const won = selectedFighter === winnerFighter;
     const odds = parseFloat(calculateOdds(selectedFighter!));
-    const winAmount = won ? betAmount * odds : 0;
+    const winAmount = won ? Math.floor(betAmount * odds) : 0;
 
     if (won) {
-      setBalance(prev => prev + winAmount);
-      setMessage(`🎉 ${fighters[winnerFighter].name} WINS! You won $${winAmount.toFixed(2)}! 🎉`);
+      const newCredits = await updateCredits(winAmount, 'win');
+      if (newCredits !== null) {
+        toast.success(`You won ${winAmount} credits!`);
+        setMessage(`🎉 ${fighters[winnerFighter].name} WINS! You won ${winAmount} credits! 🎉`);
+      }
     } else {
-      setMessage(`${fighters[winnerFighter].name} WINS! You lost $${betAmount.toFixed(2)}. Try again!`);
+      const newCredits = await updateCredits(betAmount, 'loss');
+      if (newCredits !== null) {
+        toast.error(`You lost ${betAmount} credits!`);
+        setMessage(`${fighters[winnerFighter].name} WINS! You lost ${betAmount} credits. Try again!`);
+      }
     }
 
     setBetHistory(prev => [{
-      id: Date.now() + Math.random(), // Add random number to ensure uniqueness
+      id: Date.now() + Math.random(),
       betAmount: betAmount,
       fighter: fighters[selectedFighter!].name,
       won: won,
@@ -274,7 +336,7 @@ export default function ChickenFightGame({session}: {session: any}) {
           <div className="flex items-center gap-4">
             <div className="bg-slate-900/70 rounded-xl px-6 py-3 border-2 border-orange-500/50 backdrop-blur-xl">
               <div className="text-orange-300 text-xs font-bold">BALANCE</div>
-              <div className="text-2xl font-black text-yellow-400">${balance.toFixed(2)}</div>
+              <div className="text-2xl font-black text-yellow-400">{session?.user?.credites}</div>
             </div>
             
             <div className="bg-slate-900/70 rounded-xl px-6 py-3 border-2 border-orange-500/50 backdrop-blur-xl">
@@ -512,14 +574,14 @@ export default function ChickenFightGame({session}: {session: any}) {
                         className="bg-slate-900/50 border-2 border-orange-500/50 text-white text-xl font-bold h-14"
                       />
                       <div className="flex gap-2">
-                        {[10, 25, 50, 100].map(amount => (
+                        {[1, 2, 3, 4].map(amount => (
                           <Button
                             key={amount}
                             onClick={() => setBetAmount(amount)}
                             disabled={fighting || countdown > 0}
                             className="flex-1 bg-orange-900/50 border border-orange-500/50 text-white hover:bg-orange-800/50 text-sm"
                           >
-                            ${amount}
+                            {amount}
                           </Button>
                         ))}
                       </div>
