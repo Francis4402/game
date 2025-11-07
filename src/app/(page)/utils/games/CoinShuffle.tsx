@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Trophy, Volume2, VolumeX, ArrowLeft, Eye, EyeOff, Shuffle, Coins } from 'lucide-react';
+import { Trophy, Volume2, VolumeX, ArrowLeft, Eye, Shuffle, Coins } from 'lucide-react';
 import Link from 'next/link';
 
 interface BetHistory {
@@ -107,7 +109,7 @@ export default function CoinShuffleGame({session}: {session: any}) {
       }
 
       // Swap two random bowls
-      const positions = [0, 1, 2];
+      // const positions = [0, 1, 2];
       const idx1 = Math.floor(Math.random() * 3);
       let idx2 = Math.floor(Math.random() * 3);
       while (idx2 === idx1) {
@@ -179,10 +181,10 @@ export default function CoinShuffleGame({session}: {session: any}) {
     setMessage('Place your bet for the next round!');
   };
 
-  const getBowlPosition = (index: number) => {
-    const positions = ['left-0', 'left-1/2 -translate-x-1/2', 'right-0'];
-    return positions[index];
-  };
+  // const getBowlPosition = (index: number) => {
+  //   const positions = ['left-0', 'left-1/2 -translate-x-1/2', 'right-0'];
+  //   return positions[index];
+  // };
 
   if (!mounted) {
     return null;
