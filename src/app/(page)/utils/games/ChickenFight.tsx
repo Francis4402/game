@@ -32,7 +32,7 @@ interface BetHistory {
 export default function ChickenFightGame({session}: {session: any}) {
 
   const [mounted, setMounted] = useState(false);
-  const [credits, setCredits] = useState(session?.user?.credites || 0);
+  const [credits, setCredits] = useState(session?.user?.credites ?? 0);
   const [betAmount, setBetAmount] = useState(1);
   const [selectedFighter, setSelectedFighter] = useState<string | null>(null);
   const [fighting, setFighting] = useState(false);
@@ -335,8 +335,8 @@ export default function ChickenFightGame({session}: {session: any}) {
 
           <div className="flex items-center gap-4">
             <div className="bg-slate-900/70 rounded-xl px-6 py-3 border-2 border-orange-500/50 backdrop-blur-xl">
-              <div className="text-orange-300 text-xs font-bold">BALANCE</div>
-              <div className="text-2xl font-black text-yellow-400">{session?.user?.credites}</div>
+              <div className="text-orange-300 text-xs font-bold">Credits</div>
+              <div className="text-2xl font-black text-yellow-400">{credits}</div>
             </div>
             
             <div className="bg-slate-900/70 rounded-xl px-6 py-3 border-2 border-orange-500/50 backdrop-blur-xl">
